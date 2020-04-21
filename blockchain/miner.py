@@ -23,8 +23,14 @@ def proof_of_work(last_proof):
     start = timer()
 
     print("Searching for next proof")
-    proof = 0
+    proof = 123456789
     #  TODO: Your code here
+
+    # Pass the last proof in to check that the proof is valid based on the requirements. 
+    # We keep increasing the proof until we find one that works.
+    while valid_proof(last_proof, proof) is False:
+        proof += 1111
+
 
     print("Proof found: " + str(proof) + " in " + str(timer() - start))
     return proof
@@ -35,12 +41,22 @@ def valid_proof(last_hash, proof):
     Validates the Proof:  Multi-ouroborus:  Do the last five characters of
     the hash of the last proof match the first five characters of the hash
     of the new proof?
-
     IE:  last_hash: ...AE912345, new hash 12345E88...
     """
 
     # TODO: Your code here!
-    pass
+      
+    # The last hash comes in as an int. We need to convert it to a string and encode it so that we can hash it.
+    # We need the hashed version of the proof because that is what we are matching against
+    last_proof = f'{last_hash}'.encode()
+    last_proof_hash = hashlib.sha256(last_proof).hexdigest()
+
+    # Our proof is passed in as an int and needs to be converted to a string and encoded so we can hash it.
+    guess = f'{proof}'.encode()
+    guess_hash = hashlib.sha256(guess).hexdigest()
+    
+    return guess_hash[:6] == last_proof_hash[-6:]
+
 
 
 if __name__ == '__main__':
